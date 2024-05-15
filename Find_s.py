@@ -1,51 +1,59 @@
 #Implement and demonstrate the Find-S algorithm for finding the most specific hypothesis
 
+import csv
 
-import numpy as np
+num_attributes = 6
+a = []
+print("\n The Given Training Data Set \n")
 
-class FindS:
-    def __init__(self, num_features):
-        self.num_features = num_features
-        self.hypothesis = np.array(['0'] * num_features)
+with open(r'D:/My Files/Engineering/6th Sem/Machine Learning Lab/Dataset/Data.csv', 'r', encoding='utf-8') as csvfile:
+    reader = csv.reader(csvfile)
+    next(reader)  # Skip the header row
+    for row in reader:
+        a.append(row)
+        print(row)
 
-    def fit(self, X, y):
-        for i in range(len(X)):
-            if y[i] == 1:  # Positive instance
-                for j in range(self.num_features):
-                    if self.hypothesis[j] == '0':
-                        self.hypothesis[j] = X[i][j]
-                    elif self.hypothesis[j] != X[i][j]:
-                        self.hypothesis[j] = '?'
+print("\n The initial value of hypothesis: ")
 
-    def predict(self, X):
-        predictions = []
-        for i in range(len(X)):
-            positive = True
-            for j in range(self.num_features):
-                if self.hypothesis[j] != '?' and self.hypothesis[j] != X[i][j]:
-                    positive = False
-                    break
-            predictions.append(positive)
-        return predictions
+hypothesis = ['0'] * num_attributes
+print(hypothesis)
+for j in range(0, num_attributes):
+    hypothesis[j] = a[0][j]
 
-# Example usage:
-X_train = [
-    ['Sunny', 'Warm', 'Normal', 'Strong', 'Warm', 'Same'],
-    ['Sunny', 'Warm', 'High', 'Strong', 'Warm', 'Same'],
-    ['Rainy', 'Cold', 'High', 'Strong', 'Warm', 'Change'],
-    ['Sunny', 'Warm', 'High', 'Strong', 'Cool', 'Change']
-]
-y_train = [1, 1, 0, 1]  # 1 for positive instances, 0 for negative
+print("\n Find S: Finding a Maximally Specific Hypothesis\n")
 
-model = FindS(num_features=len(X_train[0]))
-model.fit(X_train, y_train)
+for i in range(0, len(a)):
+    if a[i][num_attributes] == 'Yes':
+        for j in range(0, num_attributes):
+            if a[i][j] != hypothesis[j]:
+                hypothesis[j] = '?'
+            else:
+                hypothesis[j] = a[i][j]
+    print(" For Training instance No:{0} the hypothesis is".format(i), hypothesis)
 
-print("Most specific hypothesis:", model.hypothesis)
+print("\n The Maximally Specific Hypothesis for a given TrainingExamples :\n")
+print(hypothesis)
 
-X_test = [
-    ['Sunny', 'Warm', 'Normal', 'Strong', 'Warm', 'Same'],
-    ['Sunny', 'Cold', 'High', 'Strong', 'Warm', 'Same']
-]
 
-predictions = model.predict(X_test)
-print("Predictions:", predictions)
+# Output:
+
+# The Given Training Data Set 
+
+# ['Sunny ', 'Warm ', 'Normal', 'Strong', 'Warm', 'same', 'yes']
+# ['Sunny ', 'Warm ', 'High', 'Strong', 'Warm', 'same', 'yes']
+# ['Rainy ', 'Cold', 'High', 'Strong', 'Warm', 'change', 'no ']
+# ['Sunny ', 'Warm ', 'High', 'Strong', 'Cool', 'change', 'yes']
+
+#  The initial value of hypothesis: 
+# ['0', '0', '0', '0', '0', '0']
+
+#  Find S: Finding a Maximally Specific Hypothesis
+
+#  For Training instance No:0 the hypothesis is ['Sunny ', 'Warm ', 'Normal', 'Strong', 'Warm', 'same']
+#  For Training instance No:1 the hypothesis is ['Sunny ', 'Warm ', '?', 'Strong', 'Warm', 'same']
+#  For Training instance No:2 the hypothesis is ['Sunny ', 'Warm ', '?', 'Strong', 'Warm', 'same']
+#  For Training instance No:3 the hypothesis is ['Sunny ', 'Warm ', '?', 'Strong', '?', '?']
+
+#  The Maximally Specific Hypothesis for a given TrainingExamples :
+
+# ['Sunny ', 'Warm ', '?', 'Strong', '?', '?']
