@@ -31,8 +31,7 @@ def learn(concepts, target):
         print(" step {}".format(i+1))
         print(specific_h)         
         print(general_h)
-        print("\n")
-        print("\n")
+        print("")
 
     indices = [i for i, val in enumerate(general_h) if val == ['?', '?', '?', '?', '?', '?']]    
     for i in indices:   
@@ -43,3 +42,32 @@ s_final, g_final = learn(concepts, target)
 
 print("Final Specific_h:", s_final, sep="\n")
 print("Final General_h:", g_final, sep="\n")
+
+
+# Output: 
+
+# Initialization of specific_h 
+#  ['Sunny' 'Warm' 'Normal' 'Strong' 'Warm' 'Same']
+
+# Initialization of general_h 
+#  [['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?']]
+#  step 1
+# ['Sunny' 'Warm' 'Normal' 'Strong' 'Warm' 'Same']
+# [['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?']]
+
+#  step 2
+# ['Sunny' 'Warm' 'Normal' 'Strong' 'Warm' 'Same']
+# [['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?']]
+
+#  step 3
+# ['Sunny' 'Warm' 'Normal' 'Strong' 'Warm' 'Same']
+# [['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?']]
+
+#  step 4
+# ['Sunny' 'Warm' 'Normal' 'Strong' 'Warm' 'Same']
+# [['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?'], ['?', '?', '?', '?', '?', '?']]
+
+# Final Specific_h:
+# ['Sunny' 'Warm' 'Normal' 'Strong' 'Warm' 'Same']
+# Final General_h:
+# []
