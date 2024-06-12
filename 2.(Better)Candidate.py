@@ -60,3 +60,8 @@ S, G = candidate_elimination(data)
 
 print("Most Specific Hypothesis (S):", S)
 print("Most General Hypotheses (G):", G)
+
+# Output:
+# Most Specific Hypothesis (S): ['Sunny', 'Warm', '?', 'Strong', '?', '?']
+# Most General Hypotheses (G): [['Sunny', '?', '?', 'Strong', '?', '?']]
+

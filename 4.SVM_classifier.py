@@ -39,7 +39,7 @@ training_data_accuracy = accuracy_score(Y_train, X_train_prediction)
 
 print('Accuracy score on training data = ', training_data_accuracy)
 
-# accuracy on training data
+# accuracy on testing data
 X_test_prediction = classifier.predict(X_test)
 test_data_accuracy = accuracy_score(Y_test, X_test_prediction)
 
