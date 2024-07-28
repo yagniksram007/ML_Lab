@@ -4,92 +4,60 @@
 import numpy as np
 import pandas as pd
 from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-import matplotlib.pyplot as plt
-import seaborn as sns
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
 # Load the Iris dataset
 iris = load_iris()
-X = iris.data
-y = iris.target
+X, y = iris.data, iris.target
 
-# Preprocess the data (standardize features and split into train/test sets)
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.35, random_state=42)
+
+# Normalize the features
 scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
 
-# Define the KNN classifier and hyperparameters for Grid Search
-knn = KNeighborsClassifier()
-param_grid = {'n_neighbors': range(1, 21)}  # Test k from 1 to 20
+# Initialize the kNN classifier with k=3
+knn = KNeighborsClassifier(n_neighbors=3)
 
-# Perform Grid Search with cross-validation
-grid_search = GridSearchCV(estimator=knn, param_grid=param_grid, cv=5, scoring='accuracy', verbose=1)
-grid_search.fit(X_train, y_train)
+# Train the model
+knn.fit(X_train, y_train)
 
-# Get the best performing model and its hyperparameters
-best_knn = grid_search.best_estimator_
-best_params = grid_search.best_params_
-print(f"Best Parameters: {best_params}")
+# Make predictions on the test data
+y_pred = knn.predict(X_test)
 
-# Make predictions using the best model
-y_pred = best_knn.predict(X_test)
-
-# Evaluate the best model
+# Analyze the results
 accuracy = accuracy_score(y_test, y_pred)
-print(f"\nAccuracy: {accuracy * 100:.2f}%")
+print(f'Accuracy:{accuracy:.2f}\n')
 
-# Print classification report and confusion matrix
-print("\nClassification Report:")
-print(classification_report(y_test, y_pred))
+conf_matrix = confusion_matrix(y_test, y_pred)
+print('Confusion Matrix:')
+print(conf_matrix,"\n")
 
-print("\nConfusion Matrix:")
-conf_mat = confusion_matrix(y_test, y_pred)
-print(conf_mat)
-
-# # Plot Grid Search results
-# plt.figure(figsize=(10, 6))
-# plt.plot(param_grid['n_neighbors'], grid_search.cv_results_['mean_test_score'], marker='o')
-# plt.xlabel('Number of Neighbors (k)')
-# plt.ylabel('Mean Cross-Validated Accuracy')
-# plt.title('Grid Search Results for KNN Classifier')
-# plt.grid(True)
-# plt.xticks(param_grid['n_neighbors'])
-# plt.tight_layout()
-# plt.show()
-
-# # Plot confusion matrix as a heatmap
-# plt.figure(figsize=(8, 6))
-# sns.heatmap(conf_mat, annot=True, fmt='d', cmap='Blues', xticklabels=iris.target_names, yticklabels=iris.target_names)
-# plt.xlabel('Predicted Label')
-# plt.ylabel('True Label')
-# plt.title('Confusion Matrix')
-# plt.show()
-
-
+class_report = classification_report(y_test, y_pred)
+print('Classification Report:')
+print(class_report)
 
 # Output:
-# Fitting 5 folds for each of 20 candidates, totalling 100 fits
-# Best Parameters: {'n_neighbors': 3}
+# Accuracy:0.98
 
-# Accuracy: 100.00%
+# Confusion Matrix:
+# [[19  0  0]
+#  [ 0 17  0]
+#  [ 0  1 16]]
 
 # Classification Report:
 #               precision    recall  f1-score   support
 
-#            0       1.00      1.00      1.00        10
-#            1       1.00      1.00      1.00         9
-#            2       1.00      1.00      1.00        11
+#            0       1.00      1.00      1.00        19
+#            1       0.94      1.00      0.97        17
+#            2       1.00      0.94      0.97        17
 
-#     accuracy                           1.00        30
-#    macro avg       1.00      1.00      1.00        30
-# weighted avg       1.00      1.00      1.00        30
+#     accuracy                           0.98        53
+#    macro avg       0.98      0.98      0.98        53
+# weighted avg       0.98      0.98      0.98        53
 
-
-# Confusion Matrix:
-# [[10  0  0]
-#  [ 0  9  0]
-#  [ 0  0 11]]
-    

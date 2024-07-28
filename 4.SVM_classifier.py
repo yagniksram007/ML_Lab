@@ -1,77 +1,51 @@
 # Demonstrate the working of SVM classifier for a suitable dataset
 
 import numpy as np
-import pandas as pd
-from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+from sklearn import datasets
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn import svm
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, classification_report
 
-#loading the data from the csv file to pandas dataframe
-diabetes_data = pd.read_csv('D:/My Files/Engineering/6th Sem/Machine Learning Lab/Dataset/diabetes.csv')
+iris = datasets.load_iris()
+X = iris.data[:, :2]
+y = iris.target
 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-diabetes_data['Outcome'].value_counts()
+svm_classifier = SVC(kernel='linear', random_state=42)
+svm_classifier.fit(X_train, y_train)
 
-# separating the features and target
-features = diabetes_data.drop(columns='Outcome', axis=1)
-target = diabetes_data['Outcome']
+y_pred = svm_classifier.predict(X_test)
 
-# Data Standardisation
-scaler = StandardScaler()
-scaler.fit(features)
-standardized_data = scaler.transform(features)
+accuracy = accuracy_score(y_test, y_pred)
+class_report = classification_report(y_test, y_pred)
 
-features = standardized_data
-target = diabetes_data['Outcome']
+print("Accuracy:", accuracy)
+print("Classification Report:\n", class_report)
 
-# Preprocess the data
-X_train, X_test, Y_train, Y_test = train_test_split(features, target, test_size=0.2, random_state = 42)
+x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01), np.arange(y_min, y_max, 0.01))
+Z = svm_classifier.predict(np.c_[xx.ravel(), yy.ravel()])
+Z = Z.reshape(xx.shape)
 
-# Train the model
-classifier = svm.SVC(kernel = 'linear')
-classifier.fit(X_train, Y_train)
+plt.contourf(xx, yy, Z, alpha=0.8)
+plt.scatter(X[:, 0], X[:, 1], c=y, marker='o', edgecolors='k')
+plt.xlabel('Sepal length')
+plt.ylabel('Sepal width')
+plt.title('SVM Classifier Decision Boundary')
+plt.show()
 
-# Model Evaluation
-# accuracy on training data
-X_train_prediction = classifier.predict(X_train)
-training_data_accuracy = accuracy_score(Y_train, X_train_prediction)
-
-print('Accuracy score on training data = ', training_data_accuracy)
-
-# accuracy on testing data
-X_test_prediction = classifier.predict(X_test)
-test_data_accuracy = accuracy_score(Y_test, X_test_prediction)
-
-print('Accuracy score on test data = ', test_data_accuracy)
-
-# Testing phase
-input_data = (5,166,72,19,175,25.8,0.587,51)
-
-# input data to numpy array
-input_data_as_numpy_array = np.asarray(input_data)
-
-# reshape the array
-input_data_reshaped = input_data_as_numpy_array.reshape(1,-1)
-
-# standardizing the input data
-std_data = scaler.transform(input_data_reshaped)
-print(std_data)
-
-prediction = classifier.predict(std_data)
-print(prediction)
-
-if (prediction[0] == 0):
-  print('The person is not diabetic')
-
-else:
-  print('The Person is diabetic') 
-  
-  
 # Output:
-# Accuracy score on training data =  0.7719869706840391
-# Accuracy score on test data =  0.7597402597402597
-# [[ 0.3429808   1.41167241  0.14964075 -0.09637905  0.82661621 -0.78595734
-#    0.34768723  1.51108316]]
-# [1]
-# The Person is diabetic  
+# Accuracy: 0.9
+# Classification Report:
+#                precision    recall  f1-score   support
+
+#            0       1.00      1.00      1.00        10
+#            1       0.88      0.78      0.82         9
+#            2       0.83      0.91      0.87        11
+
+#     accuracy                           0.90        30
+#    macro avg       0.90      0.90      0.90        30
+# weighted avg       0.90      0.90      0.90        30

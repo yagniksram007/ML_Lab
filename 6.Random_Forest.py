@@ -12,7 +12,7 @@ X = iris.data
 y = iris.target
 
 # Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.35, random_state=42)
 
 # Create a Random Forest Classifier with 100 trees
 rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
@@ -25,21 +25,21 @@ y_pred = rf_classifier.predict(X_test)
 
 # Calculate accuracy
 accuracy = accuracy_score(y_test, y_pred)
-report = classification_report(y_test, y_pred, target_names=iris.target_names)
+report = classification_report(y_test, y_pred)
 
-print("Accuracy:", accuracy)
+print(f'Accuracy: {accuracy:.2f}')
 print('Classification Report:')
 print(report)
 
 # Output:
-# Accuracy: 1.0
+# Accuracy: 0.98
 # Classification Report:
 #               precision    recall  f1-score   support
 
-#       setosa       1.00      1.00      1.00        19
-#   versicolor       1.00      1.00      1.00        13
-#    virginica       1.00      1.00      1.00        13
+#            0       1.00      1.00      1.00        19
+#            1       0.94      1.00      0.97        17
+#            2       1.00      0.94      0.97        17
 
-#     accuracy                           1.00        45
-#    macro avg       1.00      1.00      1.00        45
-# weighted avg       1.00      1.00      1.00        45
+#     accuracy                           0.98        53
+#    macro avg       0.98      0.98      0.98        53
+# weighted avg       0.98      0.98      0.98        53
